@@ -69,6 +69,7 @@ int main(void)
             TokenTemporal = strtok(NULL, " ");
             i++;
         }
+		/*printf("%s", buffer);*/
         free(TokenMain);
     }
     return (0);
