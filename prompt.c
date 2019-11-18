@@ -63,7 +63,7 @@ int main(void)
             break;
         }
         TokenTemporal = strtok(buffer, " ");
-        while (TokenTemporal != NULL)
+        while    (TokenTemporal != NULL)
         {
             TokenMain[i] = TokenTemporal;
             TokenTemporal = strtok(NULL, " ");
@@ -74,7 +74,7 @@ int main(void)
     return (0);
 }
 
-//char envp[] = {(char *) "PATH=/bin/$var", 0};
+//char envp[] = {(char *) "PATH=/bin/$x", 0};
 // exit
 // cd
 // ls
