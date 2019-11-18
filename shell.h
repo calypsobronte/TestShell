@@ -7,6 +7,6 @@
 #include <sys/stat.h>
 #include <limits.h>
 #include <sys/types.h>
-int main(int argc, char const *argv[]);
-char **TokensGenator(char *dates);
+// int main(int argc, char const *argv[]);
+// char **TokensGenator(char *dates);
 #endif /* libraries example of shell Holberton */
