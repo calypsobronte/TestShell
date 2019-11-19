@@ -1,38 +1,4 @@
 #include "shell.h"
-/* int main(int argc, char const *argv[])
-{
-        printf("\e[1;1H\e[2J");
-        char *buffer;
-        size_t BUFFSIZE = 32;
-        size_t characters;
-        char **s =  malloc(BUFFSIZE * sizeof(char));
-        buffer = (char *)malloc(BUFFSIZE * sizeof(char));
-        if(buffer == NULL)
-        {
-            perror("Unable to allocate buffer");
-            exit(1);
-        }
-        while (1)
-        {
-            //Start color
-            printf("\e[36mHolbisPro\e[0m");
-            printf("$ >");
-            //End color
-            printf("\e[92m \e[0m");
-            characters = getline(&buffer,&BUFFSIZE,stdin);
-            if (characters == -1)
-            {
-                printf("\n");
-                break;
-            }
-            //Call Tokens
-            TokensGenator(buffer);
-        }
-        free(s);
-        free(buffer);
-    return 0;
-}
- */
 
 int main(int ac, char **av)
 {
@@ -74,17 +40,14 @@ int main(int ac, char **av)
         {
 			TokenMain[i] = malloc((sizeof(char) * strlen(TokenTemporal)) + 1);
             strcpy(TokenMain[i], TokenTemporal);
-			printf("Command Requested is %s\n", TokenMain[i]);
             TokenTemporal = strtok(NULL, " ");
 			i++;
         }
-		get_func(TokenMain[0]);
+		get_func(TokenMain[0], TokenMain);
         free_shell(TokenMain, i);
     }
     return (0);
 }
-
-
 
 void free_shell(char **TokenMain, int size)
 {
@@ -97,20 +60,31 @@ for (i = 0; i < size; i++)
 free(TokenMain);
 }
 
-int get_func(char * TokenMain)
+int get_func(char * TokenMain, char **Token)
 {
-	char *search;
-	search = malloc(sizeof(char) * (strlen(TokenMain) + 6));
+	char search[1024];
+	pid_t child_pid;
+	int status;
 	strcpy(search, "/bin/");
 	TokenMain[strlen(TokenMain)-1] = '\0';
 	strcat(search, TokenMain);
 	if(access(search, X_OK | F_OK) == 0)
 	{
-		printf("%s is executable\n", search);
-		free(search);
-		return(1);
+    child_pid = fork();
+    if (child_pid == -1)
+    {
+        perror("Error:");
+        return (1);
+    }
+    if (child_pid == 0)
+    {
+		execve(search, Token, NULL);
+		return(0);
 	}
-	printf("%s is not executable\n", search);
-	free(search);
-	return(0);
+	else
+    {
+        wait(&status);
+    }
+	}
+	return(1);
 }
