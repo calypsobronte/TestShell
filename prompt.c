@@ -6,7 +6,7 @@ int main(int ac, char **av)
     char **TokenMain;
     size_t BUFFSIZE = 32;
     size_t characters;
-    int i = 0, pid, size = 0;
+    int i = 0;
     buffer = malloc(BUFFSIZE * sizeof(char));
     if (buffer == NULL)
     {
@@ -67,6 +67,27 @@ int get_func(char * TokenMain, char **Token)
 	int status;
 	strcpy(search, "/bin/");
 	TokenMain[strlen(TokenMain)-1] = '\0';
+	if(access(TokenMain, X_OK | F_OK) == 0)
+	{
+    child_pid = fork();
+    if (child_pid == -1)
+    {
+        perror("Error:");
+        return (1);
+    }
+    if (child_pid == 0)
+    {
+		execve(TokenMain, Token, NULL);
+        fflush(0);
+		return(0);
+	}
+	else
+    {
+        wait(&status);
+    }
+	}
+	else
+	{
 	strcat(search, TokenMain);
 	if(access(search, X_OK | F_OK) == 0)
 	{
@@ -79,12 +100,14 @@ int get_func(char * TokenMain, char **Token)
     if (child_pid == 0)
     {
 		execve(search, Token, NULL);
+        fflush(0);
 		return(0);
 	}
 	else
     {
         wait(&status);
     }
+	}
 	}
 	return(1);
 }
