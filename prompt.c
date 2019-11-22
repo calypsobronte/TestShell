@@ -2,8 +2,8 @@
 
 int main(int ac, char **av)
 {
-    char *buffer, *TokenTemporal, *copy;
-    char **TokenMain;
+    char *buffer = NULL, *TokenTemporal = NULL, *copy = NULL;
+    char **TokenMain = NULL;
     size_t BUFFSIZE = 32;
     size_t characters;
     int i = 0;
@@ -65,8 +65,14 @@ int get_func(char * TokenMain, char **Token)
 	char search[1024];
 	pid_t child_pid;
 	int status;
+	int i = 0;
 	strcpy(search, "/bin/");
 	TokenMain[strlen(TokenMain)-1] = '\0';
+	while(Token[i] != NULL)
+	{
+		i++;
+	}
+	Token[i] = NULL;
 	if(access(TokenMain, X_OK | F_OK) == 0)
 	{
     child_pid = fork();
@@ -82,9 +88,7 @@ int get_func(char * TokenMain, char **Token)
 		return(0);
 	}
 	else
-    {
         wait(&status);
-    }
 	}
 	else
 	{
@@ -104,9 +108,7 @@ int get_func(char * TokenMain, char **Token)
 		return(0);
 	}
 	else
-    {
         wait(&status);
-    }
 	}
 	}
 	return(1);

@@ -11,6 +11,5 @@
 #include <sys/wait.h>
 void free_shell(char **TokenMain, int size);
 int get_func(char * TokenMain, char **Token);
-// int main(int argc, char const *argv[]);
-// char **TokensGenator(char *dates);
-#endif /* libraries example of shell Holberton */
+
+#endif /* libraries example of shell Holberton  gcc -g -Wall -Werror -Wextra -pedantic prompt.c -o hsh && valgrind --leak-check=full --show-leak-kinds=all ./hsh*/
