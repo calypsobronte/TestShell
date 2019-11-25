@@ -2,18 +2,18 @@
 
 int main(int ac, char **av)
 {
-    char *buffer = NULL, *TokenTemporal = NULL, *copy = NULL;
-    char **TokenMain = NULL;
+    char *buffer = '\0', *TokenTemporal = '\0', *copy = '\0';
+    char **TokenMain = '\0';
     size_t BUFFSIZE = 32;
-    size_t characters;
+    size_t characters = 0;
     int i = 0;
-    buffer = malloc(BUFFSIZE * sizeof(char));
-    if (buffer == NULL)
-    {
-        perror("Unable to allocate buffer");
-        exit(1);
-    }
-	copy = malloc(sizeof(char) * BUFFSIZE);
+	buffer = malloc(BUFFSIZE * sizeof(char));
+	if (buffer == NULL)
+	{
+		perror("Unable to allocate buffer");
+		exit(1);
+	}
+	copy = malloc(sizeof(char *) * BUFFSIZE);
 	if (copy == NULL)
 	{
 	perror("Unable to allocate buffer");
@@ -26,6 +26,10 @@ int main(int ac, char **av)
         characters = getline(&buffer, &BUFFSIZE, stdin);
 		strcpy(copy, buffer);
         TokenMain = malloc(sizeof(char *) * BUFFSIZE);
+		if (TokenMain == NULL)
+		{
+			return(0);
+		}
         if (characters == (size_t)-1)
         {
             free(TokenMain);
@@ -63,17 +67,19 @@ free(TokenMain);
 int get_func(char * TokenMain, char **Token)
 {
 	char search[1024];
-	pid_t child_pid;
-	int status;
+	pid_t child_pid = 0;
+	int status = 0;
 	int i = 0;
 	strcpy(search, "/bin/");
 	TokenMain[strlen(TokenMain)-1] = '\0';
-	while(Token[i] != NULL)
+
+	while (Token[i] != NULL)
 	{
 		i++;
 	}
-	Token[i] = NULL;
-	if(access(TokenMain, X_OK | F_OK) == 0)
+	Token[i] = '\0';
+
+	if (access(TokenMain, X_OK | F_OK) == 0)
 	{
     child_pid = fork();
     if (child_pid == -1)
@@ -84,7 +90,6 @@ int get_func(char * TokenMain, char **Token)
     if (child_pid == 0)
     {
 		execve(TokenMain, Token, NULL);
-        fflush(0);
 		return(0);
 	}
 	else
@@ -104,12 +109,12 @@ int get_func(char * TokenMain, char **Token)
     if (child_pid == 0)
     {
 		execve(search, Token, NULL);
-        fflush(0);
 		return(0);
 	}
 	else
         wait(&status);
 	}
+		kill(child_pid, status);
 	}
 	return(1);
 }
