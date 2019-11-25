@@ -2,53 +2,51 @@
 
 int main(int ac, char **av)
 {
-    char *buffer = NULL, *TokenTemporal = NULL;
-    char **TokenMain = NULL;
-    size_t BUFFSIZE = 32;
-    size_t characters = 0;
-    int i = 0, j = 0;
+	char *buffer = NULL, *TokenTemporal = NULL;
+	char **TokenMain = NULL;
+	size_t BUFFSIZE = 32, characters = 0;
+	int i = 0, j = 0;
 
-    while (1)
-    {
+	while (1)
+	{
 		buffer = malloc(BUFFSIZE * sizeof(char));
 		if (buffer == NULL)
 		{
 			perror("Unable to allocate buffer");
 			exit(1);
 		}
-        printf("HolbiPro");
-        printf("$ ");
-        characters = getline(&buffer, &BUFFSIZE, stdin);
-        TokenMain = malloc(sizeof(char *) * BUFFSIZE);
+		printf("HolbiPro");
+		printf("$ ");
+		characters = getline(&buffer, &BUFFSIZE, stdin);
+		TokenMain = malloc(sizeof(char *) * BUFFSIZE);
 		if (TokenMain == NULL)
 		{
-			return(0);
+			return (0);
 		}
-        if (characters == (size_t)-1)
-        {
-            free(TokenMain);
-            free(buffer);
-            printf("\n");
-            break;
-        }
-        TokenTemporal = strtok(buffer, " ");
+		if (characters == (size_t)-1)
+		{
+			free(TokenMain);
+			free(buffer);
+			printf("\n");
+			break;
+		}
+		TokenTemporal = strtok(buffer, " ");
 		i = 0;
-        while (TokenTemporal != NULL)
-        {
+		while (TokenTemporal != NULL)
+		{
 			TokenMain[i] = malloc((sizeof(char) * strlen(TokenTemporal)) + 1);
-            strcpy(TokenMain[i], TokenTemporal);
-            TokenTemporal = strtok(NULL, " ");
+			strcpy(TokenMain[i], TokenTemporal);
+			TokenTemporal = strtok(NULL, " ");
 			i++;
-        }
+		}
 		get_func(TokenMain[0], TokenMain);
-        /*free_shell(TokenMain, i);*/
 		j = 0;
 		while (TokenMain[j] != NULL)
 			j++;
-        free_shell(TokenMain, j);
+		free_shell(TokenMain, j);
 		free(buffer);
-    }
-    return (0);
+		}
+		return (0);
 }
 
 void free_shell(char **TokenMain, int size)
@@ -56,22 +54,19 @@ void free_shell(char **TokenMain, int size)
 int i;
 for (i = 0; i < size; i++)
 {
-	if (TokenMain[i] != NULL)
-    free(TokenMain[i]);
+if (TokenMain[i] != NULL)
+	free(TokenMain[i]);
 }
 free(TokenMain);
 }
 
-int get_func(char * TokenMain, char **Token)
+int get_func(char *TokenMain, char **Token)
 {
-	/*change size*/
-	/*char search[1024];*/
 	char *search = NULL;
 	pid_t child_pid = 0;
 	int status = 0;
 	int i = 0;
 
-	/*Add conditional check null*/
 	while (Token[i] != NULL)
 		i++;
 	Token[i] = NULL;
@@ -82,10 +77,7 @@ int get_func(char * TokenMain, char **Token)
 	else if (i > 1)
 	{
 		Token[i - 1][strlen(Token[i - 1]) - 1] = '\0';
-		printf("------>%s<---------\n",Token[i - 1]);
 	}
-
-	/*add conditional*/
 	if (TokenMain[0] == '/')
 	{
 		search = malloc(sizeof(char) * strlen(TokenMain) + 1);
@@ -96,7 +88,6 @@ int get_func(char * TokenMain, char **Token)
 	{
 		search = malloc(sizeof(char) * strlen(TokenMain) + 6);
 		strcpy(search, "/bin/");
-		/*cat /bin/ with ls of input*/
 		strcat(search, TokenMain);
 	}
 
@@ -116,16 +107,14 @@ int get_func(char * TokenMain, char **Token)
 		if (child_pid == 0)
 		{
 			execve(search, Token, NULL);
-			return(0);
+			return (0);
 		}
 		else
-			waitpid(child_pid, &status,0);
+			waitpid(child_pid, &status, 0);
 	}
 	else
-	{
 		perror("./shell");
-		exit(127);
-	}
+	free(TokenMain);
 	free(search);
-	return(1);
+	return (1);
 }
