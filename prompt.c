@@ -7,12 +7,7 @@ int main(int ac, char **av)
     size_t BUFFSIZE = 32;
     size_t characters = 0;
     int i = 0;
-	/*copy = malloc(sizeof(char *) * BUFFSIZE);
-	if (copy == NULL)
-	{
-	perror("Unable to allocate buffer");
-	exit(1);
-	}*/
+
     while (1)
     {
 		buffer = malloc(BUFFSIZE * sizeof(char));
@@ -67,7 +62,7 @@ int get_func(char * TokenMain, char **Token)
 {
 	//change size
 	/*char search[1024];*/
-	char *search;
+	char *search = NULL;
 	pid_t child_pid = 0;
 	int status = 0;
 	int i = 0;
@@ -99,15 +94,13 @@ int get_func(char * TokenMain, char **Token)
 		strcpy(search, "/bin/");
 		//cat /bin/ with ls of input
 		strcat(search, TokenMain);
-		printf("-------->%s<----------\n", search);
 	}
 
 	free(Token[0]);
 	Token[0] = malloc(sizeof(char) * strlen(search) + 1);
 	strcat(Token[0], search);
-	printf("%s\n", TokenMain);
 
-	//Check executable
+
 	if (access(search, X_OK | F_OK) == 0)
 	{
 		child_pid = fork();
@@ -124,30 +117,6 @@ int get_func(char * TokenMain, char **Token)
 		else
 			waitpid(child_pid, &status,0);
 	}
-	/*
-	else
-	{
-	strcat(search, TokenMain);
-	free(Token[0]);
-	Token[0] = malloc(sizeof(char) * strlen(search) + 1);
-	strcat(Token[0], search);
-	if(access(search, X_OK | F_OK) == 0)
-	{
-    child_pid = fork();
-    if (child_pid == -1)
-    {
-        perror("Error:");
-        return (1);
-    }
-    if (child_pid == 0)
-    {
-		execve(search, Token, NULL);
-		return(0);
-	}
-	else
-        wait(&status);
-	}
-		kill(child_pid, status);
-	}*/
+	free(search);
 	return(1);
 }
