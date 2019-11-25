@@ -117,6 +117,11 @@ int get_func(char * TokenMain, char **Token)
 		else
 			waitpid(child_pid, &status,0);
 	}
+	else
+	{
+		perror("./shell");
+		exit(127);
+	}
 	free(search);
 	return(1);
 }
