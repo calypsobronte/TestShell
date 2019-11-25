@@ -1,5 +1,10 @@
 #include "shell.h"
-
+/**
+ * main - funcion de la shell
+ * @ac: int
+ * @av: point of point
+ * Return: 1
+ */
 int main(int ac, char **av)
 {
 	char *buffer = NULL, *TokenTemporal = NULL;
@@ -48,7 +53,11 @@ int main(int ac, char **av)
 		}
 		return (0);
 }
-
+/**
+ * free_shell - funcion de para liberar en el main
+ * @TokenMain: char
+ * @size: size del argumento
+ */
 void free_shell(char **TokenMain, int size)
 {
 int i;
@@ -60,6 +69,12 @@ if (TokenMain[i] != NULL)
 free(TokenMain);
 }
 
+/**
+ * get_func - funcion con sus principales funcionamientos con los diferentes comando y tags
+ * @TokenMain: char
+ * @Token: token
+ * Return: 1
+ */
 int get_func(char *TokenMain, char **Token)
 {
 	char *search = NULL;
