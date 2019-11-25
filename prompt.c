@@ -2,29 +2,28 @@
 
 int main(int ac, char **av)
 {
-    char *buffer = '\0', *TokenTemporal = '\0', *copy = '\0';
-    char **TokenMain = '\0';
+    char *buffer = NULL, *TokenTemporal = NULL;
+    char **TokenMain = NULL;
     size_t BUFFSIZE = 32;
     size_t characters = 0;
     int i = 0;
-	buffer = malloc(BUFFSIZE * sizeof(char));
-	if (buffer == NULL)
-	{
-		perror("Unable to allocate buffer");
-		exit(1);
-	}
-	copy = malloc(sizeof(char *) * BUFFSIZE);
+	/*copy = malloc(sizeof(char *) * BUFFSIZE);
 	if (copy == NULL)
 	{
 	perror("Unable to allocate buffer");
 	exit(1);
-	}
+	}*/
     while (1)
     {
+		buffer = malloc(BUFFSIZE * sizeof(char));
+		if (buffer == NULL)
+		{
+			perror("Unable to allocate buffer");
+			exit(1);
+		}
         printf("HolbiPro");
         printf("$ ");
         characters = getline(&buffer, &BUFFSIZE, stdin);
-		strcpy(copy, buffer);
         TokenMain = malloc(sizeof(char *) * BUFFSIZE);
 		if (TokenMain == NULL)
 		{
@@ -34,11 +33,10 @@ int main(int ac, char **av)
         {
             free(TokenMain);
             free(buffer);
-			free(copy);
             printf("\n");
             break;
         }
-        TokenTemporal = strtok(copy, " ");
+        TokenTemporal = strtok(buffer, " ");
 		i = 0;
         while (TokenTemporal != NULL)
         {
@@ -49,6 +47,7 @@ int main(int ac, char **av)
         }
 		get_func(TokenMain[0], TokenMain);
         free_shell(TokenMain, i);
+		free(buffer);
     }
     return (0);
 }
@@ -66,35 +65,71 @@ free(TokenMain);
 
 int get_func(char * TokenMain, char **Token)
 {
-	char search[1024];
+	//change size
+	/*char search[1024];*/
+	char *search;
 	pid_t child_pid = 0;
 	int status = 0;
 	int i = 0;
-	strcpy(search, "/bin/");
-	TokenMain[strlen(TokenMain)-1] = '\0';
 
-
-	if (access(TokenMain, X_OK | F_OK) == 0)
+	//Add conditional check null
+	while (Token[i] != NULL)
+		i++;
+	Token[i] = NULL;
+	if (i == 1)
 	{
-    child_pid = fork();
-    if (child_pid == -1)
-    {
-        perror("Error:");
-        return (1);
-    }
-    if (child_pid == 0)
-    {
-		execve(TokenMain, Token, NULL);
-		return(0);
+		TokenMain[strlen(TokenMain) - 1] = '\0';
+	}
+	else if (i > 1)
+	{
+		Token[i - 1][strlen(Token[i - 1]) - 1] = '\0';
+		printf("------>%s<---------\n",Token[i - 1]);
+	}
+	
+	//add conditional
+	if (TokenMain[0] == '/')
+	{
+		search = malloc(sizeof(char) * strlen(TokenMain) + 1);
+		strcpy(search, TokenMain);
+
 	}
 	else
-        wait(&status);
+	{
+		search = malloc(sizeof(char) * strlen(TokenMain) + 6);
+		strcpy(search, "/bin/");
+		//cat /bin/ with ls of input
+		strcat(search, TokenMain);
+		printf("-------->%s<----------\n", search);
 	}
+
+	free(Token[0]);
+	Token[0] = malloc(sizeof(char) * strlen(search) + 1);
+	strcat(Token[0], search);
+	printf("%s\n", TokenMain);
+
+	//Check executable
+	if (access(search, X_OK | F_OK) == 0)
+	{
+		child_pid = fork();
+		if (child_pid == -1)
+		{
+			perror("Error:");
+			return (1);
+		}
+		if (child_pid == 0)
+		{
+			execve(search, Token, NULL);
+			return(0);
+		}
+		else
+			waitpid(child_pid, &status,0);
+	}
+	/*
 	else
 	{
 	strcat(search, TokenMain);
 	free(Token[0]);
-	Token[0] = malloc(sizeof(char) * strlen(search));
+	Token[0] = malloc(sizeof(char) * strlen(search) + 1);
 	strcat(Token[0], search);
 	if(access(search, X_OK | F_OK) == 0)
 	{
@@ -113,6 +148,6 @@ int get_func(char * TokenMain, char **Token)
         wait(&status);
 	}
 		kill(child_pid, status);
-	}
+	}*/
 	return(1);
 }
