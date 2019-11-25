@@ -73,11 +73,6 @@ int get_func(char * TokenMain, char **Token)
 	strcpy(search, "/bin/");
 	TokenMain[strlen(TokenMain)-1] = '\0';
 
-	while (Token[i] != NULL)
-	{
-		i++;
-	}
-	Token[i] = '\0';
 
 	if (access(TokenMain, X_OK | F_OK) == 0)
 	{
@@ -98,6 +93,9 @@ int get_func(char * TokenMain, char **Token)
 	else
 	{
 	strcat(search, TokenMain);
+	free(Token[0]);
+	Token[0] = malloc(sizeof(char) * strlen(search));
+	strcat(Token[0], search);
 	if(access(search, X_OK | F_OK) == 0)
 	{
     child_pid = fork();
