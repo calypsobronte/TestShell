@@ -129,7 +129,6 @@ int get_func(char *TokenMain, char **Token)
 	}
 	else
 		perror("./shell");
-	free(TokenMain);
 	free(search);
 	return (1);
 }
