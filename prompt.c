@@ -7,6 +7,7 @@
  */
 int main(int ac, char **av)
 {
+	// Lina
 	char *buffer = NULL, *TokenTemporal = NULL;
 	char **TokenMain = NULL;
 	size_t BUFFSIZE = 32, characters = 0;
@@ -53,6 +54,8 @@ int main(int ac, char **av)
 		}
 		return (0);
 }
+
+// Chris
 /**
  * free_shell - funcion de para liberar en el main
  * @TokenMain: char
@@ -75,8 +78,10 @@ free(TokenMain);
  * @Token: token
  * Return: 1
  */
+// Chris y Lina
 int get_func(char *TokenMain, char **Token)
 {
+	// Chris
 	char *search = NULL;
 	pid_t child_pid = 0;
 	int status = 0;
@@ -105,7 +110,7 @@ int get_func(char *TokenMain, char **Token)
 		strcpy(search, "/bin/");
 		strcat(search, TokenMain);
 	}
-
+	// Lina
 	free(Token[0]);
 	Token[0] = malloc(sizeof(char) * strlen(search) + 1);
 	strcat(Token[0], search);
