@@ -181,7 +181,7 @@ return (dest);
 int _strlen(char *str)
 {
 char *point = str;
-	size_t _string;
+size_t _string;
 
 _string = 0;
 if (str == NULL)
