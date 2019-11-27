@@ -36,13 +36,13 @@ int main(int ac, char **av)
 			printf("\n");
 			break;
 		}
-		TokenTemporal = strtok(buffer, " ");
+		TokenTemporal = _strtok(buffer, " ");
 		i = 0;
 		while (TokenTemporal != NULL)
 		{
-			TokenMain[i] = malloc((sizeof(char) * strlen(TokenTemporal)) + 1);
-			strcpy(TokenMain[i], TokenTemporal);
-			TokenTemporal = strtok(NULL, " ");
+			TokenMain[i] = malloc((sizeof(char) * _strlen(TokenTemporal)) + 1);
+			_strcpy(TokenMain[i], TokenTemporal);
+			TokenTemporal = _strtok(NULL, " ");
 			i++;
 		}
 		get_func(TokenMain[0], TokenMain);
@@ -92,28 +92,29 @@ int get_func(char *TokenMain, char **Token)
 	Token[i] = NULL;
 	if (i == 1)
 	{
-		TokenMain[strlen(TokenMain) - 1] = '\0';
+		TokenMain[_strlen(TokenMain) - 1] = '\0';
 	}
 	else if (i > 1)
 	{
-		Token[i - 1][strlen(Token[i - 1]) - 1] = '\0';
+		Token[i - 1][_strlen(Token[i - 1]) - 1] = '\0';
 	}
-	if (TokenMain[0] == '/')
+	// cambio 27 nov
+	if (TokenMain[0] == '/' || TokenMain[0] == '.')
 	{
-		search = malloc(sizeof(char) * strlen(TokenMain) + 1);
-		strcpy(search, TokenMain);
+		search = malloc(sizeof(char) * _strlen(TokenMain) + 1);
+		_strcpy(search, TokenMain);
 
 	}
 	else
 	{
-		search = malloc(sizeof(char) * strlen(TokenMain) + 6);
-		strcpy(search, "/bin/");
-		strcat(search, TokenMain);
+		search = malloc(sizeof(char) * _strlen(TokenMain) + 6);
+		_strcpy(search, "/bin/");
+		_strcat(search, TokenMain);
 	}
 	// Lina
 	free(Token[0]);
-	Token[0] = malloc(sizeof(char) * strlen(search) + 1);
-	strcat(Token[0], search);
+	Token[0] = malloc(sizeof(char) * _strlen(search) + 1);
+	_strcat(Token[0], search);
 
 
 	if (access(search, X_OK | F_OK) == 0)
@@ -138,6 +139,99 @@ int get_func(char *TokenMain, char **Token)
 		perror("./shell");
 	free(search);
 	return (1);
+}
+
+/**
+ * _strcat - function that concatena two strings
+ * @dest: leeter
+ * @src: letter
+ * Return: dest of string
+ */
+char *_strcat(char *dest, char *src)
+{
+int words = 0, b;
+while (dest[words] != 0)
+words++;
+for (b = 0; src[b] != 0; b++, words++)
+dest[words] = src[b];
+dest[words] = 0;
+return (dest);
+}
+
+/**
+ * _strcpy - copy of string
+ * @dest: string
+ * @src: string
+ * Return: dest a copy
+ */
+char *_strcpy(char *dest, char *src)
+{
+int cont_words;
+for (cont_words = 0; src[cont_words] != 0; cont_words++)
+dest[cont_words] = src[cont_words];
+dest[cont_words] = 0;
+return (dest);
+}
+
+/**
+ * _strlen - counts length of a string
+ * @str: - letter string
+ * Return: number of string
+ */
+int _strlen(char *str)
+{
+int _string;
+while (str[_string] != 0)
+_string++;
+return (_string);
+}
+
+#include "shell.h"
+/**
+  * _strtok - tokenizes a string
+  * @str: string to tokenize
+  * @delimitador: string that contains the delimitadoriters
+  * Return: pointer to position in string of a null terminated word.
+  */
+char *_strtok(char *str, const char *delimitador)
+{
+	static char *run_string, *end_string, *end;
+	unsigned int i, j;
+	int words = 0;
+
+	if (str == NULL)
+	{
+		if (run_string == NULL || end == NULL)
+			return (NULL);
+		str = end + 1;
+	}
+	else
+		end_string = str + _strlen(str);
+	for (i = 0; str + i < end_string; i++)
+	{
+		for (j = 0; delimitador != NULL && delimitador[j] != '\0'; j++)
+		{
+			if (str[i] == delimitador[j])
+			{
+				if (words == 1)
+				{
+					str[i] = '\0';
+					end = str + i;
+					return (run_string);
+				}
+				break;
+			}
+		}
+		if (delimitador[j] == '\0' && words == 0)
+		{
+			words = 1;
+			run_string = str + i;
+		}
+	}
+	end = NULL;
+	if (words == 1)
+		return (run_string);
+	return (NULL);
 }
 
 /* cambiar por los que tenemos OJO*/
