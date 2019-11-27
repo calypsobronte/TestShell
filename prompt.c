@@ -141,6 +141,7 @@ int get_func(char *TokenMain, char **Token)
 	return (1);
 }
 
+//Lina
 /**
  * _strcat - function that concatena two strings
  * @dest: leeter
@@ -158,6 +159,7 @@ dest[words] = 0;
 return (dest);
 }
 
+//Chris
 /**
  * _strcpy - copy of string
  * @dest: string
@@ -173,6 +175,7 @@ dest[cont_words] = 0;
 return (dest);
 }
 
+// Lina
 /**
  * _strlen - counts length of a string
  * @str: - letter string
@@ -191,7 +194,7 @@ while (*point++ != '\0')
 return (_string);
 }
 
-#include "shell.h"
+// Chris y Lina
 /**
   * _strtok - tokenizes a string
   * @str: string to tokenize
@@ -200,10 +203,11 @@ return (_string);
   */
 char *_strtok(char *str, const char *delimitador)
 {
+	//Lina
 	static char *run_string, *end_string, *end;
 	unsigned int i, j;
 	int words = 0;
-
+	//chris
 	if (str == NULL)
 	{
 		if (run_string == NULL || end == NULL)
@@ -214,6 +218,7 @@ char *_strtok(char *str, const char *delimitador)
 		end_string = str + _strlen(str);
 	for (i = 0; str + i < end_string; i++)
 	{
+		//lina
 		for (j = 0; delimitador != NULL && delimitador[j] != '\0'; j++)
 		{
 			if (str[i] == delimitador[j])
@@ -227,6 +232,7 @@ char *_strtok(char *str, const char *delimitador)
 				break;
 			}
 		}
+		//chris
 		if (delimitador[j] == '\0' && words == 0)
 		{
 			words = 1;
@@ -234,6 +240,7 @@ char *_strtok(char *str, const char *delimitador)
 		}
 	}
 	end = NULL;
+	//lina
 	if (words == 1)
 		return (run_string);
 	return (NULL);
