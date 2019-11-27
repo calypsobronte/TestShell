@@ -180,9 +180,14 @@ return (dest);
  */
 int _strlen(char *str)
 {
-int _string;
-while (str[_string] != 0)
-_string++;
+char *point = str;
+	size_t _string;
+
+_string = 0;
+if (str == NULL)
+	return (_string);
+while (*point++ != '\0')
+	_string++;
 return (_string);
 }
 
