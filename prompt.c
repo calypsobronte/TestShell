@@ -21,7 +21,7 @@ int main(int ac, char **av)
 			perror("Unable to allocate buffer");
 			exit(1);
 		}
-		printf("HolbiPro");
+		printf("HolbiPro"); // cambiar despues
 		printf("$ ");
 		characters = getline(&buffer, &BUFFSIZE, stdin);
 		TokenMain = malloc(sizeof(char *) * BUFFSIZE);
@@ -130,10 +130,18 @@ int get_func(char *TokenMain, char **Token)
 			return (0);
 		}
 		else
-			waitpid(child_pid, &status, 0);
+			//waitpid(child_pid, &status, 0);
+			waitpid(child_pid, NULL, 0);
+
 	}
 	else
 		perror("./shell");
 	free(search);
 	return (1);
 }
+
+/* cambiar por los que tenemos OJO*/
+
+// strlen https://github.com/calypsobronte/holbertonschool-low_level_programming/blob/master/0x05-pointers_arrays_strings/2-strlen.c
+// strcpy https://github.com/calypsobronte/holbertonschool-low_level_programming/blob/master/0x05-pointers_arrays_strings/9-strcpy.c
+// strcat https://github.com/calypsobronte/holbertonschool-low_level_programming/blob/master/0x06-pointers_arrays_strings/0-strcat.c
